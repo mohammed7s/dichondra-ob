@@ -1,2 +1,43 @@
-<h1>Callback</h1>
-<p>This is the callback URI for DICHONDRA LTD's Open Banking integration.</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing Authorization</title>
+</head>
+<body>
+    <h1>Processing Authorization...</h1>
+    <div id="result"></div>
+    <script>
+        // Debug logging
+        console.log('URL Hash:', window.location.hash);
+        
+        // Get the fragment parameters from the URL hash
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        
+        // Log received parameters
+        console.log('Received parameters:', {
+            code: params.get('code'),
+            state: params.get('state'),
+            id_token: params.get('id_token')
+        });
+
+        // Show processing status
+        document.getElementById('result').innerHTML = `
+            <p>Received authorization response...</p>
+            <p>Redirecting to processing server...</p>
+        `;
+
+        // Construct the processing URL with parameters
+        const processingUrl = new URL('https://553e-223-204-117-28.ngrok-free.app/process-auth');
+        processingUrl.searchParams.append('code', params.get('code'));
+        processingUrl.searchParams.append('state', params.get('state'));
+        processingUrl.searchParams.append('id_token', params.get('id_token'));
+
+        // Log the redirect URL
+        console.log('Redirecting to:', processingUrl.toString());
+
+        // Perform the redirect
+        window.location.href = processingUrl.toString();
+    </script>
+</body>
+</html>
